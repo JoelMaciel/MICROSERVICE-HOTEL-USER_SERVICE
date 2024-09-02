@@ -35,4 +35,14 @@ public class UserConverter {
                 .creationDate(LocalDate.now())
                 .build();
     }
+
+    public User toUpdateUser(User user, UserRequestDTO userRequestDTO) {
+        return user.toBuilder()
+                .name(userRequestDTO.getName())
+                .email(userRequestDTO.getEmail())
+                .information(userRequestDTO.getInformation())
+                .build();
+    }
+
+
 }
