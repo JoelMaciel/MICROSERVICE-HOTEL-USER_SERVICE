@@ -13,6 +13,7 @@ import lombok.*;
 public class UserRequestDTO {
 
     @Size(min = 8, max = 30)
+    @NotBlank
     private String name;
 
     @Email
@@ -20,5 +21,6 @@ public class UserRequestDTO {
     private String email;
 
     @Size(min = 15, max = 200)
+    @NotBlank
     private String information;
 }
