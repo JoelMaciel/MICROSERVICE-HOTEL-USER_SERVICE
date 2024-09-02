@@ -15,4 +15,8 @@ public interface UserService {
     UserDTO getUser(String userId);
 
     User optionalUser(String userId);
+
+    UserDTO updateUser(String userId, UserRequestDTO userRequestDTO);
+
+    void deleteUser(String userId);
 }
