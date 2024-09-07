@@ -15,6 +15,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
+mcsv:
+  qualification:
+    url: "http://localhost:8083/api/qualifications/users/"
+
 logging:
   level:
     com.joelmaciel.user_service: TRACE
