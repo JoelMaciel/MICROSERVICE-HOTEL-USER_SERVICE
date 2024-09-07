@@ -1,4 +1,4 @@
-package com.msvc.user_service.domain.services;
+package com.msvc.user_service.domain.services.impl;
 
 import com.msvc.user_service.api.dtos.converter.UserConverter;
 import com.msvc.user_service.api.dtos.request.UserRequestDTO;
@@ -8,18 +8,29 @@ import com.msvc.user_service.domain.exceptions.EmailAlreadyExistsException;
 import com.msvc.user_service.domain.exceptions.NameAlreadyExistsException;
 import com.msvc.user_service.domain.exceptions.UserNotFoundException;
 import com.msvc.user_service.domain.repositories.UserRepository;
+import com.msvc.user_service.domain.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImp implements UserService {
 
+    @Value("${mcsv.qualification.url}")
+    private String urlQualification;
+
     private final UserRepository userRepository;
     private final UserConverter userConverter;
+    private final RestTemplate restTemplate;
 
     @Transactional
     @Override
@@ -38,6 +49,9 @@ public class UserServiceImp implements UserService {
     @Override
     public UserDTO getUser(String userId) {
         User user = optionalUser(userId);
+
+        findQualificationByUserId(userId, user);
+
         return userConverter.toDTO(user);
     }
 
@@ -62,6 +76,12 @@ public class UserServiceImp implements UserService {
     public User optionalUser(String userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    private void findQualificationByUserId(String userId, User user) {
+        ArrayList qualifiersByUser = restTemplate.getForObject(urlQualification + userId, ArrayList.class);
+        user.setQualifiers(qualifiersByUser);
+        log.info("{}", qualifiersByUser);
     }
 
     private void validateUser(UserRequestDTO userRequestDTO) {
