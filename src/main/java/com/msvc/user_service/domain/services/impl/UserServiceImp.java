@@ -3,6 +3,7 @@ package com.msvc.user_service.domain.services.impl;
 import com.msvc.user_service.api.dtos.converter.UserConverter;
 import com.msvc.user_service.api.dtos.request.UserRequestDTO;
 import com.msvc.user_service.api.dtos.response.UserDTO;
+import com.msvc.user_service.api.openfeing.HotelService;
 import com.msvc.user_service.domain.entities.Hotel;
 import com.msvc.user_service.domain.entities.Qualifier;
 import com.msvc.user_service.domain.entities.User;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -38,6 +38,7 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
     private final RestTemplate restTemplate;
+    private final HotelService hotelService;
 
     @Transactional
     @Override
@@ -77,10 +78,7 @@ public class UserServiceImp implements UserService {
     }
 
     private Qualifier addHotelDetailsToQualifier(Qualifier qualifier) {
-        ResponseEntity<Hotel> hotelResponse =
-                restTemplate.getForEntity(urlHotel + qualifier.getHotelId(), Hotel.class);
-
-        Hotel hotel = hotelResponse.getBody();
+        Hotel hotel = hotelService.getHotel(qualifier.getHotelId());
         qualifier.setHotel(hotel);
         return qualifier;
     }
