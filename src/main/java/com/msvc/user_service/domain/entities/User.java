@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +30,7 @@ public class User {
 
     @CreationTimestamp
     private LocalDate creationDate;
+
+    @Transient
+    private List<Qualifier> qualifiers;
 }

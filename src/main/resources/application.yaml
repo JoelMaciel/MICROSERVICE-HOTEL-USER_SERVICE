@@ -14,6 +14,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+  flyway:
+    locations: classpath:db/migration, classpath:db/testdb
+
+mcsv:
+  qualification:
+    url: "http://QUALIFIER-SERVICE/api/qualifications/users/"
+  hotel:
+    url: "http://HOTEL-SERVICE/api/hotels/"
 
 logging:
   level:

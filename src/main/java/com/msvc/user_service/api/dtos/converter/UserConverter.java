@@ -23,6 +23,7 @@ public class UserConverter {
                 .name(user.getName())
                 .email(user.getEmail())
                 .information(user.getInformation())
+                .qualifier(user.getQualifiers())
                 .creationDate(user.getCreationDate())
                 .build();
     }
@@ -43,6 +44,4 @@ public class UserConverter {
                 .information(userRequestDTO.getInformation())
                 .build();
     }
-
-
 }
