@@ -1,5 +1,6 @@
 package com.msvc.user_service.api.dtos.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.msvc.user_service.domain.entities.Qualifier;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
     private String id;

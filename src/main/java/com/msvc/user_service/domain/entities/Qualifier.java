@@ -19,4 +19,5 @@ public class Qualifier {
     private int qualification;
     private LocalDate qualificationDate;
     private String observation;
+    private Hotel hotel;
 }
