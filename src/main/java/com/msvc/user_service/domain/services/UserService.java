@@ -19,4 +19,6 @@ public interface UserService {
     UserDTO updateUser(String userId, UserRequestDTO userRequestDTO);
 
     void deleteUser(String userId);
+
+    UserDTO createFallbackResponse(String userId, String serviceName, Exception exception);
 }

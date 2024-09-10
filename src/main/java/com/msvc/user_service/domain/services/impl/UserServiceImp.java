@@ -106,6 +106,15 @@ public class UserServiceImp implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
+    @Override
+    public UserDTO createFallbackResponse(String userId, String serviceName, Exception exception) {
+        log.error("{} service is temporarily unavailable for user: {}. Cause: {}", serviceName, userId, exception.getMessage());
+        return UserDTO.builder()
+                .id(userId)
+                .information("Service is temporarily unavailable")
+                .build();
+    }
+
     private void validateUser(UserRequestDTO userRequestDTO) {
         if (userRepository.existsByName(userRequestDTO.getName())) {
             throw new NameAlreadyExistsException(userRequestDTO.getName());

@@ -4,6 +4,7 @@ import com.msvc.user_service.api.dtos.request.UserRequestDTO;
 import com.msvc.user_service.api.dtos.response.UserDTO;
 import com.msvc.user_service.domain.services.UserService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+    @Retry(name = "ratingHotelRetry", fallbackMethod = "ratingHotelRetryFallback")
     public UserDTO findUser(@PathVariable String userId) {
         return userService.getUser(userId);
     }
@@ -51,12 +53,13 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-    public UserDTO ratingHotelFallback(String userId, Throwable e) {
-        log.error("Hotel service is temporarily unavailable for user: {}. Cause: {}", userId, e.getMessage());
-        return UserDTO.builder()
-                .id(userId)
-                .information("Service is temporarily unavailable")
-                .build();
+    public UserDTO ratingHotelFallback(String userId, Exception exception) {
+        return userService.createFallbackResponse(userId, "Hotel", exception);
+
+    }
+
+    public UserDTO ratingHotelRetryFallback(String userId, Exception exception) {
+        return userService.createFallbackResponse(userId, "Qualifier", exception);
     }
 
 }
